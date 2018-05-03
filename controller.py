@@ -1,4 +1,5 @@
 import csv
+from PyQt5.QtWidgets import QMessageBox
 from import_screen import ImportScreen
 from loading_screen import LoadingScreen
 from report_screen import ReportScreen
@@ -9,7 +10,8 @@ class Controller(object):
     def __init__(self, app, config, version):
         self.loadingScreen = None
         self.partner_name = None
-        self.database = Sql("host='%s' dbname='%s' user='%s' password='%s'" % (
+        self._conn = None
+        self.database = Sql(self, 'host=\'%s\' dbname=\'%s\' user=\'%s\' password=\'%s\'' % (
             config['host'],
             config['dbname'],
             config['user'],
@@ -23,8 +25,8 @@ class Controller(object):
 
     def loadPartners(self):
         """"Conecta a la DB y devuelve una lista de proveedores"""
-        self.database.partners = self.database.query('SELECT * FROM RES_PARTNER WHERE supplier=1')
-        return self.database.partners       # ['mock', 'mock2']
+        self.database.partners = self.database.query('SELECT id, display_nameq FROM RES_PARTNER WHERE supplier=True')
+        return self.database.partners       # ['mock', 'mock2'] #
 
     def ingestFile(self, file):
         self.file = []
@@ -81,10 +83,28 @@ class Controller(object):
         self.database.commit()
         self.reportScreen.show()
 
-    def exit(self):
-        """ sale del programa """
-        if self.loadingScreen is None:
-            self.importScreen.close()
-            self.reportScreen.close()
+    def showDatabaseNotAvailable(self):
+        QMessageBox.information(None, "Base de datos no disponible", """<b> La base de datos no reponde.</b>
+            <p>Verifique la conexion de este equipo y la base de datos. Tenga presente
+            que esta aplicacion solo funciona in-situ.""")
+        self.exit(1)
 
-        exit(0)
+    def showDatabaseQueryFailed(self):
+        QMessageBox.information(None, "La consulta a la Base de datos ha fallado", """<b> Ha fallado una consulta a la base de datos.</b>
+            <p>Verifique la conexion de este equipo y la base de datos. Tenga presente
+            que esta aplicacion solo funciona in-situ.""")
+        self.exit(1)
+
+    def exit(self, return_value=0):
+        """Sale del programa."""
+        if self.database:
+            self.database.close()
+
+        if self.loadingScreen is None:
+            if hasattr(self, 'importScreen') and self.importScreen:
+                self.importScreen.close()
+
+            if hasattr(self, 'reportScreen') and self.reportScreen:
+                self.reportScreen.close()
+
+        exit(return_value)
