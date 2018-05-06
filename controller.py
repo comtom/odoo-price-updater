@@ -1,4 +1,5 @@
 import csv
+import sys
 from PyQt5.QtWidgets import QMessageBox
 from import_screen import ImportScreen
 from loading_screen import LoadingScreen
@@ -107,4 +108,4 @@ class Controller(object):
             if hasattr(self, 'reportScreen') and self.reportScreen:
                 self.reportScreen.close()
 
-        exit(return_value)
+        sys.exit(return_value)
