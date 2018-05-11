@@ -1,3 +1,5 @@
 .env
 .idea
+build
+price_updater.build
 __pycache__
