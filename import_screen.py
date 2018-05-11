@@ -19,7 +19,7 @@ class ImportScreen(QDialog, Ui_Import):
 
         self.comboBox.clear()
         self.comboBox.addItem('Seleccione un proveedor')
-        self.comboBox.addItems(partners)
+        self.comboBox.addItems(partners.keys())
 
         self.pushButton.clicked.connect(self.open)
 

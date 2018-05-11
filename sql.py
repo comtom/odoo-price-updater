@@ -1,4 +1,5 @@
 import psycopg2
+import psycopg2.extras
 
  
 class Sql:
@@ -21,20 +22,20 @@ class Sql:
         if not self.handler:
             self.handler = self.connect()
 
-        try:
+        #try:
             # with self.handler.cursor() as cur:
             #     cur.execute(sql_code)
             #     return cur.fetchall()
-            self.cursor = self.handler.cursor()
-            self.cursor.execute(sql_code)
+        self.cursor = self.handler.cursor(cursor_factory=psycopg2.extras.DictCursor)
+        self.cursor.execute(sql_code)
 
-            tmp = self.cursor.fetchone()
-            # self.handler.commit()
-            self.cursor.close()
-            return tmp
-        except (psycopg2.ProgrammingError, psycopg2.OperationalError):
-            self.controller.showDatabaseQueryFailed()
-            return None
+        tmp = self.cursor.fetchall()
+        # self.handler.commit()
+        self.cursor.close()
+        return tmp
+        #except (psycopg2.ProgrammingError, psycopg2.OperationalError):
+        #    self.controller.showDatabaseQueryFailed()
+        #    return None
 
     def commit(self):
         return self.handler.commit()

@@ -26,8 +26,10 @@ class Controller(object):
 
     def loadPartners(self):
         """"Conecta a la DB y devuelve una lista de proveedores"""
-        self.database.partners = self.database.query('SELECT id, display_nameq FROM RES_PARTNER WHERE supplier=True')
-        return self.database.partners       # ['mock', 'mock2'] #
+        partners = self.database.query('SELECT id, display_name FROM RES_PARTNER WHERE supplier=True')
+        self.database.partners = {partner['display_name']: partner['id'] for partner in partners}
+
+        return self.database.partners
 
     def ingestFile(self, file):
         self.file = []
@@ -59,7 +61,9 @@ class Controller(object):
             return
 
         partner_name = self.importScreen.comboBox.currentText()
-        self.database.products = self.database.query("SELECT id, description, provider_code, internal_reference, price FROM products_products WHERE supplier=%s" % self.database.partners[partner_name])
+
+        self.database.products = self.database.query("SELECT t.id, p.name_template, p.default_code, t.description_sale, t.description, t.name, t.list_price  FROM product_product p JOIN product_template t ON p.product_tmpl_id=t.id WHERE p.active=true and p.supplier=%s" % self.database.partners[partner_name])
+        # FIXME: revisar cual de p.name_template, t.description_sale, t.description, t.name es el necesario
 
         self.importScreen.hide()
 
@@ -75,7 +79,7 @@ class Controller(object):
             product_id = self.matchProduct(product['provider_code'], product['description'])
 
             if product_id:
-                self.database.query('UPDATE product_product SET price=%s WHERE id=%s', (product['price'], product_id))
+                self.database.query('UPDATE product_template SET list_price=%s, write_date=now() WHERE id=%s', (product['price'], product_id))
 
         self.finishImport()
 
