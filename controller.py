@@ -62,7 +62,14 @@ class Controller(object):
 
         partner_name = self.importScreen.comboBox.currentText()
 
-        self.database.products = self.database.query("SELECT t.id, p.name_template, p.default_code, t.description_sale, t.description, t.name, t.list_price  FROM product_product p JOIN product_template t ON p.product_tmpl_id=t.id WHERE p.active=true and p.supplier=%s" % self.database.partners[partner_name])
+        self.database.products = self.database.query("""
+            SELECT t.id, p.name_template, p.default_code, t.description_sale, t.description, t.name, t.list_price
+            FROM product_product p
+            JOIN product_template t ON p.product_tmpl_id=t.id
+            JOIN product_supplierinfo s on p.id = s.product_id
+            WHERE p.active=true and s.name=%s
+            """ % self.database.partners[partner_name]
+        )
         # FIXME: revisar cual de p.name_template, t.description_sale, t.description, t.name es el necesario
 
         self.importScreen.hide()
@@ -73,8 +80,8 @@ class Controller(object):
         self.importExecutor()
 
     def importExecutor(self):
+        """Ejectuta cada actualizacion."""
         for product in self.file:
-
             self.loadingScreen.updateProgress()
             product_id = self.matchProduct(product['provider_code'], product['description'])
 
@@ -84,17 +91,20 @@ class Controller(object):
         self.finishImport()
 
     def finishImport(self):
+        """Termina la etapa de importacion de datos."""
         self.loadingScreen.hide()
         self.database.commit()
         self.reportScreen.show()
 
     def showDatabaseNotAvailable(self):
+        """Muestra un mensaje de error."""
         QMessageBox.information(None, "Base de datos no disponible", """<b> La base de datos no reponde.</b>
             <p>Verifique la conexion de este equipo y la base de datos. Tenga presente
             que esta aplicacion solo funciona in-situ.""")
         self.exit(1)
 
     def showDatabaseQueryFailed(self):
+        """Muestra un mensaje de error."""
         QMessageBox.information(None, "La consulta a la Base de datos ha fallado", """<b> Ha fallado una consulta a la base de datos.</b>
             <p>Verifique la conexion de este equipo y la base de datos. Tenga presente
             que esta aplicacion solo funciona in-situ.""")
