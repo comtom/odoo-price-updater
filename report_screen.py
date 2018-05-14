@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QDesktopWidget, QWidget
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtGui import QIcon
 from ui.ui_report import Ui_Report
 
 

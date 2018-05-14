@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QDialog, QDesktopWidget, QWidget
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtGui import QIcon
 from ui.ui_loading import Ui_Loading
 
 
@@ -15,10 +15,9 @@ class LoadingScreen(QDialog, Ui_Loading):
 
         self.setWindowIcon(QIcon("icons/logo-36.png"))
         self.setupUi(self)
-
         self.setWindowTitle("Actualizando precios...")
 
-        #self.controller.importExecutor()
+        self.controller.importExecutor()
 
     def updateProgress(self):
         self.progress_value += 1
