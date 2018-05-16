@@ -16,3 +16,12 @@ class ReportScreen(QDialog, Ui_Report):
         self.setupUi(self)
 
         self.setWindowTitle("Actualizador de precios - Comtom Tech")
+
+    def updateValues(self, updated_list, failed_list, code_not_found_list, description_not_found_list):
+        for item in code_not_found_list:
+            self.lst_notmatched.addItem(item)
+
+        for item in description_not_found_list:
+            self.lst_notfound.addItem(item)
+
+        self.lbl_updated.setText("%s productos actualizados correctamente. %s Productos con errores" % (len(updated_list), len(failed_list)))

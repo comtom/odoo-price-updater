@@ -19,7 +19,7 @@ class Ui_Report(object):
         self.buttonBox.setCenterButtons(False)
         self.buttonBox.setObjectName("buttonBox")
         self.lbl_updated = QtWidgets.QLabel(Report)
-        self.lbl_updated.setGeometry(QtCore.QRect(10, 80, 251, 20))
+        self.lbl_updated.setGeometry(QtCore.QRect(10, 80, 621, 20))
         self.lbl_updated.setObjectName("lbl_updated")
         self.lbl_title = QtWidgets.QLabel(Report)
         self.lbl_title.setGeometry(QtCore.QRect(10, 20, 351, 20))

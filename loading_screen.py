@@ -17,9 +17,8 @@ class LoadingScreen(QDialog, Ui_Loading):
         self.setupUi(self)
         self.setWindowTitle("Actualizando precios...")
 
-        self.controller.importExecutor()
-
     def updateProgress(self):
+        """Actualizar el progreso de la barra."""
         self.progress_value += 1
         self.progress.setValue((self.progress_value / self.progress_total) * 100)
 

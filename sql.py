@@ -27,22 +27,10 @@ class Sql:
 
         tmp = self.cursor.fetchall()
 
-        self.handler.commit()
+        #self.handler.commit()      # TODO: ver si hacer el commit  aca o al final, (transaccional)
 
         self.cursor.close()
         return tmp
-
-        # TODO: Add exception handling
-        # try:
-        #    with self.handler.cursor() as cur:
-        #        cur.execute(sql_code)
-        #        return cur.fetchall()
-        #    self.handler.commit()
-        #    self.cursor.close()
-        #    return tmp
-        # except (psycopg2.ProgrammingError, psycopg2.OperationalError):
-        #    self.controller.showDatabaseQueryFailed()
-        #    return None
 
     def commit(self):
         return self.handler.commit()

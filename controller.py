@@ -12,6 +12,12 @@ class Controller(object):
         self.loadingScreen = None
         self.partner_name = None
         self._conn = None
+
+        self.updated_list = []
+        self.failed_list = []
+        self.code_not_found_list = []
+        self.description_not_found_list = []
+
         self.database = Sql(self, 'host=\'%s\' dbname=\'%s\' user=\'%s\' password=\'%s\'' % (
             config['host'],
             config['dbname'],
@@ -25,10 +31,14 @@ class Controller(object):
         self.importScreen.show()
 
     def loadPartners(self):
-        """"Conecta a la DB y devuelve una lista de proveedores"""
-        partners = self.database.query('SELECT id, display_name FROM RES_PARTNER WHERE supplier=True')
-        self.database.partners = {partner['display_name']: partner['id'] for partner in partners}
+        """"Conecta a la DB y devuelve una lista de proveedores."""
+        try:
+            partners = self.database.query('SELECT id, display_name FROM RES_PARTNER WHERE supplier=True')
+        except Exception:
+            self.showDatabaseQueryFailed()
+            return
 
+        self.database.partners = {partner['display_name']: partner['id'] for partner in partners}
         return self.database.partners
 
     def ingestFile(self, file):
@@ -46,10 +56,16 @@ class Controller(object):
                 )
 
     def matchProduct(self, provider_code, product_description):
-        product = self.database.products[provider_code]
-
-        if product and product.description == product_description:
-            return product.id
+        try:
+            product = self.database.products[provider_code]
+        except KeyError:
+            self.code_not_found_list.append("%s,%s" % (provider_code, product_description))
+            return None
+        else:   
+            if product['description'] == product_description:
+                return product.id
+            else:
+                self.description_not_found_list.append(product['description'])
 
     def beginImport(self, file):
         self.ingestFile(file)
@@ -62,15 +78,21 @@ class Controller(object):
 
         partner_name = self.importScreen.comboBox.currentText()
 
-        self.database.products = self.database.query("""
-            SELECT t.id, p.name_template, p.default_code, t.description_sale, t.description, t.name, t.list_price
-            FROM product_product p
-            JOIN product_template t ON p.product_tmpl_id=t.id
-            JOIN product_supplierinfo s on p.id = s.product_id
-            WHERE p.active=true and s.name=%s
-            """ % self.database.partners[partner_name]
-        )
-        # FIXME: revisar cual de p.name_template, t.description_sale, t.description, t.name es el necesario
+        try:
+            products = self.database.query("""
+                SELECT t.id, p.name_template, p.default_code, t.description_sale, t.description, t.name, t.list_price
+                FROM product_product p
+                JOIN product_template t ON p.product_tmpl_id=t.id
+                JOIN product_supplierinfo s on p.id = s.product_id
+                WHERE p.active=true and s.name=%s
+                """ % self.database.partners[partner_name]
+            )
+            # TODO: revisar cual de p.name_template, t.description_sale, t.description, t.name es el necesario
+        except Exception:
+            self.showDatabaseQueryFailed()
+            return
+
+        self.database.products = {product['default_code']: {'id': product['id'], 'description': product['name'], 'price': product['list_price']} for product in products}
 
         self.importScreen.hide()
 
@@ -86,7 +108,21 @@ class Controller(object):
             product_id = self.matchProduct(product['provider_code'], product['description'])
 
             if product_id:
-                self.database.query('UPDATE product_template SET list_price=%s, write_date=now() WHERE id=%s', (product['price'], product_id))
+                try:
+                    self.database.query('UPDATE product_template SET list_price=%s, write_date=now() WHERE id=%s', (product['price'], product_id))
+                except Exception:
+                    prod_list = self.failed_list
+                else:
+                    prod_list = self.updated_list
+
+                prod_list.append(
+                    {
+                        'id': product_id,
+                        'provider_code': product['provider_code'],
+                        'name_template': product['description'],
+                        'list_price': product['price'],
+                    }
+                )
 
         self.finishImport()
 
@@ -94,6 +130,7 @@ class Controller(object):
         """Termina la etapa de importacion de datos."""
         self.loadingScreen.hide()
         self.database.commit()
+        self.reportScreen.updateValues(self.updated_list, self.failed_list, self.code_not_found_list, self.description_not_found_list)
         self.reportScreen.show()
 
     def showDatabaseNotAvailable(self):

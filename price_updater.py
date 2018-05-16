@@ -1,3 +1,4 @@
+#!env/bin/python
 # -*- coding: utf-8 -*-
 from sys import argv, exit
 from psutil import NoSuchProcess, process_iter
@@ -23,7 +24,7 @@ if __name__ == '__main__':
         except NoSuchProcess:
             pass
         else:
-            if pinfo['name'] == 'price_updater.exe':
+            if pinfo['name'].split('.')[0] == 'price_updater':
                 number_instances += 1
 
     app = QApplication(argv)

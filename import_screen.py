@@ -24,14 +24,14 @@ class ImportScreen(QDialog, Ui_Import):
         self.pushButton.clicked.connect(self.open)
 
     def open(self):
-        """Muestra un dialogo para abrir un archivo csv y devuelve su ubicacion"""
+        """Muestra un dialogo para abrir un archivo csv y devuelve su ubicacion."""
         file = QFileDialog.getOpenFileName(self, 'Seleccionar archivo a importar', filter='Archivo CSV (*.csv)') or None
         self.lineEdit.setText(file[0])
 
         return file
 
     def accept(self):
-        """Comienza el proceso de importacion"""
+        """Comienza el proceso de importacion."""
         file = self.lineEdit.text()
         if self.comboBox.currentIndex() == 0:
             QMessageBox.information(self, "No se puede importar", """<b> Debe seleccionar un proveedor.</b>
