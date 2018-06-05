@@ -21,7 +21,7 @@ if sys.platform == "win32":
     base = "Win32GUI"
 
 setup(
-    name="Odoo Price Update",
+    name="Odoo Price Updater",
     version=__price_updater_version__,
     description="Actualizador de precios para Odoo",
     author="Comtom Tech",
