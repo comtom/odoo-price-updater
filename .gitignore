@@ -2,5 +2,7 @@
 .idea
 env
 build
+dist
 price_updater.build
 __pycache__
+*.build
