@@ -80,7 +80,7 @@ class Controller(object):
 
         try:
             products = self.database.query("""
-                SELECT t.id, p.name_template, p.default_code, t.description_sale, t.description, t.name, t.list_price
+                SELECT t.id, p.name_template, s.product_code, t.description_sale, t.description, t.name, t.list_price
                 FROM product_product p
                 JOIN product_template t ON p.product_tmpl_id=t.id
                 JOIN product_supplierinfo s on p.id = s.product_id
