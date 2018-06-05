@@ -1,0 +1,6 @@
+{
+    "host": "localhost",
+    "dbname": "produccion",
+    "user": "odoo",
+    "password": "odoo"
+}
