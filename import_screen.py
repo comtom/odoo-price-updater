@@ -15,7 +15,6 @@ class ImportScreen(QDialog, Ui_Import):
         self.setupUi(self)
 
         self.setWindowTitle("Actualizador de precios - Comtom Tech")
-        self.label.setText("Seleccione el proovedor al cual ")
         self.buttonBox.button(QDialogButtonBox.Ok).setText("Comenzar")
         self.buttonBox.button(QDialogButtonBox.Cancel).setText("Cancelar")
 
