@@ -38,12 +38,12 @@ class ImportScreen(QDialog, Ui_Import):
         if self.comboBox.currentIndex() == 0:
             QMessageBox.information(self, "No se puede importar", """<b> Debe seleccionar un proveedor.</b>
                 <p>Debe seleccionar un proveedor de la lista desplegable para
-                poder comenzar el proceso de importacion de precios.""")
+                poder comenzar el proceso de importación de precios.""")
 
         elif not file:
             QMessageBox.information(self, "No se puede importar", """<b> Debe seleccionar un archivo.</b>
                 <p>Debe seleccionar un archivo CSV para poder comenzar
-                el proceso de importacion de precios.""")
+                el proceso de importación de precios.""")
 
         elif not os.path.isfile(file):
             QMessageBox.information(self, "No se puede importar", """<b> El archivo especificado no existe.</b>
@@ -64,6 +64,5 @@ class ImportScreen(QDialog, Ui_Import):
             pass
 
     def showEmptyFileError(self):
-        QMessageBox.information(self, "No se puede importar", """<b> El archivo especificado esta vacio.</b>
-            <p>Debe seleccionar un archivo CSV que contenga datos para 
-            poder importar datos.""")
+        QMessageBox.information(self, "No se puede importar", """<b> El archivo especificado esta vacío.</b>
+            <p>Debe seleccionar un archivo CSV que contenga datos para poder importarlos.""")
