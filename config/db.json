@@ -1,6 +1,7 @@
 {
-    "host": "localhost",
-    "dbname": "produccion",
-    "user": "odoo",
-    "password": "odoo"
+    "host": "192.168.0.5",
+    "port": "5432",
+    "dbname": "Demo",
+    "user": "openpg",
+    "password": "openpgpwd"
 }

@@ -51,7 +51,8 @@ class Controller(object):
                 self.file.append(
                     {
                         'provider_code': row['provider_code'],
-                        'description': row['description']
+                        'description': row['description'],
+                        'price': row['price'],
                     }
                 )
 
@@ -59,11 +60,11 @@ class Controller(object):
         try:
             product = self.database.products[provider_code]
         except KeyError:
-            self.code_not_found_list.append("%s,%s" % (provider_code, product_description))
+            self.code_not_found_list.append("%s, %s" % (provider_code, product_description))
             return None
         else:   
             if product['description'] == product_description:
-                return product.id
+                return product['id']
             else:
                 self.description_not_found_list.append(product['description'])
 
@@ -79,20 +80,20 @@ class Controller(object):
         partner_name = self.importScreen.comboBox.currentText()
 
         try:
-            products = self.database.query("""
-                SELECT t.id, p.name_template, s.product_code, t.description_sale, t.description, t.name, t.list_price
-                FROM product_product p
-                JOIN product_template t ON p.product_tmpl_id=t.id
-                JOIN product_supplierinfo s on p.id = s.product_id
-                WHERE p.active=true and s.name=%s
+            products = self.database.query(
+                """
+                    SELECT t.id, s.product_name, s.product_code, t.description_sale, t.description, t.list_price
+                    FROM product_product p
+                    JOIN product_template t ON p.product_tmpl_id=t.id
+                    JOIN product_supplierinfo s on t.id = s.product_tmpl_id
+                    WHERE p.active=true and s.name=%s
                 """ % self.database.partners[partner_name]
             )
-            # TODO: revisar cual de p.name_template, t.description_sale, t.description, t.name es el necesario
         except Exception:
             self.showDatabaseQueryFailed()
             return
 
-        self.database.products = {product['default_code']: {'id': product['id'], 'description': product['name'], 'price': product['list_price']} for product in products}
+        self.database.products = {str(product['product_code']): {'id': product['id'], 'description': product['product_name'], 'price': product['list_price']} for product in products}
 
         self.importScreen.hide()
 
@@ -109,27 +110,40 @@ class Controller(object):
 
             if product_id:
                 try:
-                    self.database.query('UPDATE product_template SET list_price=%s, write_date=now() WHERE id=%s', (product['price'], product_id))
+                    self.database.query("""
+                        UPDATE product_template SET list_price=%s, write_date=now() WHERE id=%s""" % (
+                            product['price'],
+                            product_id
+                        )
+                    )
                 except Exception:
-                    prod_list = self.failed_list
+                    self.failed_list.append(
+                        {
+                            'id': product_id,
+                            'provider_code': product['provider_code'],
+                            'name_template': product['description'],
+                            'list_price': product['price'],
+                        }
+                    )
                 else:
-                    prod_list = self.updated_list
-
-                prod_list.append(
-                    {
-                        'id': product_id,
-                        'provider_code': product['provider_code'],
-                        'name_template': product['description'],
-                        'list_price': product['price'],
-                    }
-                )
+                    self.updated_list.append(
+                        {
+                            'id': product_id,
+                            'provider_code': product['provider_code'],
+                            'name_template': product['description'],
+                            'list_price': product['price'],
+                        }
+                    )
 
         self.finishImport()
 
     def finishImport(self):
         """Termina la etapa de importacion de datos."""
         self.loadingScreen.hide()
+
         self.database.commit()
+        self.database.close()
+
         self.reportScreen.updateValues(self.updated_list, self.failed_list, self.code_not_found_list, self.description_not_found_list)
         self.reportScreen.show()
 
@@ -143,8 +157,7 @@ class Controller(object):
     def showDatabaseQueryFailed(self):
         """Muestra un mensaje de error."""
         QMessageBox.information(None, "La consulta a la Base de datos ha fallado", """<b> Ha fallado una consulta a la base de datos.</b>
-            <p>Verifique la conexion de este equipo y la base de datos. Tenga presente
-            que esta aplicacion solo funciona in-situ.""")
+            <p>Verifique la conexion de este equipo y la base de datos.""")
         self.exit(1)
 
     def exit(self, return_value=0):

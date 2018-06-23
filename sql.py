@@ -25,9 +25,9 @@ class Sql:
         self.cursor = self.handler.cursor(cursor_factory=psycopg2.extras.DictCursor)
         self.cursor.execute(sql_code)
 
-        tmp = self.cursor.fetchall()
-
-        #self.handler.commit()      # TODO: ver si hacer el commit  aca o al final, (transaccional)
+        tmp = None
+        if self.cursor.description:
+            tmp = self.cursor.fetchall()
 
         self.cursor.close()
         return tmp

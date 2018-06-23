@@ -19,9 +19,12 @@ class ReportScreen(QDialog, Ui_Report):
 
     def updateValues(self, updated_list, failed_list, code_not_found_list, description_not_found_list):
         for item in code_not_found_list:
-            self.lst_notmatched.addItem(item)
-
-        for item in description_not_found_list:
             self.lst_notfound.addItem(item)
 
-        self.lbl_updated.setText("%s productos actualizados correctamente. %s Productos con errores" % (len(updated_list), len(failed_list)))
+        for item in description_not_found_list:
+            self.lst_notmatched.addItem(item)
+
+        updated_qty = len(updated_list)
+        failed_qty = len(failed_list) + len(code_not_found_list) + len(description_not_found_list)
+        total_qty = len(updated_list) + len(failed_list) + len(code_not_found_list) + len(description_not_found_list)
+        self.lbl_updated.setText("%s productos actualizados correctamente. %s Productos con errores. Total : %s" % (updated_qty, failed_qty, total_qty))

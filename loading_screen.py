@@ -6,12 +6,12 @@ from ui.ui_loading import Ui_Loading
 
 
 class LoadingScreen(QDialog, Ui_Loading):
-    def __init__(self, parent=None, lenght=1):
+    def __init__(self, parent=None, length=1):
         """Inicializa ventana."""
         super(LoadingScreen, self).__init__(None, Qt.WindowStaysOnTopHint)
         self.controller = parent
         self.progress_value = 1
-        self.progress_total = lenght
+        self.progress_total = length
 
         self.setWindowIcon(QIcon("icons/logo-36.png"))
         self.setupUi(self)

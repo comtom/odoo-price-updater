@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import subprocess
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFileDialog, QMessageBox
 from PyQt5.QtGui import QIcon
 from ui.ui_import import Ui_Import
@@ -14,6 +15,7 @@ class ImportScreen(QDialog, Ui_Import):
         self.setupUi(self)
 
         self.setWindowTitle("Actualizador de precios - Comtom Tech")
+        self.label.setText("Seleccione el proovedor al cual ")
         self.buttonBox.button(QDialogButtonBox.Ok).setText("Comenzar")
         self.buttonBox.button(QDialogButtonBox.Cancel).setText("Cancelar")
 
@@ -22,6 +24,7 @@ class ImportScreen(QDialog, Ui_Import):
         self.comboBox.addItems(partners.keys())
 
         self.pushButton.clicked.connect(self.open)
+        self.genFile.clicked.connect(self.generateFile)
 
     def open(self):
         """Muestra un dialogo para abrir un archivo csv y devuelve su ubicacion."""
@@ -50,6 +53,16 @@ class ImportScreen(QDialog, Ui_Import):
 
         else:
             self.controller.beginImport(file)
+
+    def generateFile(self):
+        """Genera un template que sirve como guia para cargar los productos"""
+        with open(os.path.expanduser(os.path.join("carga_productos.xls")), "a") as f:
+            f.write("""price,description,provider_code/n""")
+
+        try:
+            subprocess.call("start " + os.path.expanduser(os.path.join("carga_producto.xls")), shell=True)
+        except OSError:
+            pass
 
     def showEmptyFileError(self):
         QMessageBox.information(self, "No se puede importar", """<b> El archivo especificado esta vacio.</b>

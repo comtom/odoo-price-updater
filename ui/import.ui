@@ -57,12 +57,15 @@
     <rect>
      <x>10</x>
      <y>20</y>
-     <width>281</width>
-     <height>20</height>
+     <width>421</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="text">
-    <string>explicacion breve de como funciona</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Esta aplicacion actualiza masivamente los precios de productos. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Para comenzar, presione &amp;quot;Generar Archivo&amp;quot; y luego cargue en el todos los productos para un proveedor determinado.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;A continuacion, seleccione el proveedor, el archivo y presione &amp;quot;OK&amp;quot;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox">
@@ -99,6 +102,19 @@
    </property>
    <property name="text">
     <string>Archivo</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="genFile">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>20</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Generar archivo</string>
    </property>
   </widget>
  </widget>
