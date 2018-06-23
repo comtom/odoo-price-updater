@@ -9,6 +9,8 @@ from sql import Sql
 
 class Controller(object):
     def __init__(self, app, config, version):
+        self.version = version
+        self.app = app
         self.loadingScreen = None
         self.partner_name = None
         self._conn = None
@@ -96,8 +98,7 @@ class Controller(object):
         self.database.products = {str(product['product_code']): {'id': product['id'], 'description': product['product_name'], 'price': product['list_price']} for product in products}
 
         self.importScreen.hide()
-
-        self.loadingScreen = LoadingScreen(self, row_number)
+        self.loadingScreen = LoadingScreen(self, length=row_number, app=self.app)
         self.loadingScreen.show()
 
         self.importExecutor()
