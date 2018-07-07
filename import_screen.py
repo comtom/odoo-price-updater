@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import subprocess
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFileDialog, QMessageBox
 from PyQt5.QtGui import QIcon
 from ui.ui_import import Ui_Import
@@ -54,15 +53,10 @@ class ImportScreen(QDialog, Ui_Import):
             self.controller.beginImport(file)
 
     def generateFile(self):
-        """Genera un template que sirve como guia para cargar los productos"""
-        with open(os.path.expanduser(os.path.join("carga_productos.xls")), "a") as f:
-            f.write("""price,description,provider_code/n""")
-
-        try:
-            subprocess.call("start " + os.path.expanduser(os.path.join("carga_producto.xls")), shell=True)
-        except OSError:
-            pass
+        """Llama al generador de templates"""
+        return self.controller.generateFile()
 
     def showEmptyFileError(self):
+        """Muestra un error cuando el usuario no selecciona un archivo valido"""
         QMessageBox.information(self, "No se puede importar", """<b> El archivo especificado esta vacío.</b>
             <p>Debe seleccionar un archivo CSV que contenga datos para poder importarlos.""")

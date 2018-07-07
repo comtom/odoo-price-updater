@@ -1,5 +1,7 @@
 import csv
 import sys
+import os
+import subprocess
 from PyQt5.QtWidgets import QMessageBox
 from import_screen import ImportScreen
 from loading_screen import LoadingScreen
@@ -68,7 +70,7 @@ class Controller(object):
             if product['description'] == product_description:
                 return product['id']
             else:
-                self.description_not_found_list.append(product['description'])
+                self.description_not_found_list.append("%s, %s" % (provider_code, product['description']))
 
     def beginImport(self, file):
         self.ingestFile(file)
@@ -160,6 +162,17 @@ class Controller(object):
         QMessageBox.information(None, "La consulta a la Base de datos ha fallado", """<b> Ha fallado una consulta a la base de datos.</b>
             <p>Verifique la conexion de este equipo y la base de datos.""")
         self.exit(1)
+
+    def generateFile(self):
+        """Genera un template que sirve como guia para cargar los productos"""
+        path = os.path.expanduser(os.path.join(os.getenv("HOMEPATH", ""), "carga_producto.xls"))
+        with open(path, "a") as f:
+            f.write("""price,description,provider_code/n""")
+
+        try:
+            subprocess.call("start " + path, shell=True)
+        except OSError:
+            pass
 
     def exit(self, return_value=0):
         """Sale del programa."""

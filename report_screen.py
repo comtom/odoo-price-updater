@@ -27,4 +27,5 @@ class ReportScreen(QDialog, Ui_Report):
         updated_qty = len(updated_list)
         failed_qty = len(failed_list) + len(code_not_found_list) + len(description_not_found_list)
         total_qty = len(updated_list) + len(failed_list) + len(code_not_found_list) + len(description_not_found_list)
+
         self.lbl_updated.setText("%s productos actualizados correctamente. %s Productos con errores. Total : %s" % (updated_qty, failed_qty, total_qty))
