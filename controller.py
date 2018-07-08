@@ -54,8 +54,8 @@ class Controller(object):
             for row in csvreader:
                 self.file.append(
                     {
-                        'provider_code': row['provider_code'],
-                        'description': row['description'],
+                        'provider_code': str(row['provider_code']).strip(),
+                        'description': str(row['description']).strip(),
                         'price': row['price'],
                     }
                 )
@@ -66,7 +66,7 @@ class Controller(object):
         except KeyError:
             self.code_not_found_list.append("%s, %s" % (provider_code, product_description))
             return None
-        else:   
+        else:
             if product['description'] == product_description:
                 return product['id']
             else:
@@ -97,7 +97,7 @@ class Controller(object):
             self.showDatabaseQueryFailed()
             return
 
-        self.database.products = {str(product['product_code']): {'id': product['id'], 'description': product['product_name'], 'price': product['list_price']} for product in products}
+        self.database.products = {str(product['product_code']).strip(): {'id': product['id'], 'description': str(product['product_name']).strip(), 'price': product['list_price']} for product in products}
 
         self.importScreen.hide()
         self.loadingScreen = LoadingScreen(self, length=row_number, app=self.app)
@@ -165,12 +165,12 @@ class Controller(object):
 
     def generateFile(self):
         """Genera un template que sirve como guia para cargar los productos"""
-        path = os.path.expanduser(os.path.join(os.getenv("HOMEPATH", ""), "carga_producto.xls"))
-        with open(path, "a") as f:
-            f.write("""price,description,provider_code/n""")
+        path = '"%s"' % os.path.expanduser(os.path.join(os.getenv('SYSTEMDRIVE', ''), os.getenv('HOMEPATH', ''), 'carga_producto.xls'))
+        with open(path, "w") as f:
+            f.write('price,description,provider_code\n')
 
         try:
-            subprocess.call("start " + path, shell=True)
+            subprocess.call('start ' + path, shell=True)
         except OSError:
             pass
 
