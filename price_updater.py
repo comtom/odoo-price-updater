@@ -9,7 +9,7 @@ from controller import Controller
 
 
 __timeout_ws__ = 30
-__price_updater_version__ = '1.0.3'     # debe tener 4 digitos
+__price_updater_version__ = '1.0.4'     # debe tener 4 digitos
 
 config = dict()
 

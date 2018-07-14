@@ -165,9 +165,12 @@ class Controller(object):
 
     def generateFile(self):
         """Genera un template que sirve como guia para cargar los productos"""
-        path = '"%s"' % os.path.expanduser(os.path.join(os.getenv('SYSTEMDRIVE', ''), os.getenv('HOMEPATH', ''), 'carga_producto.xls'))
-        with open(path, "w") as f:
-            f.write('price,description,provider_code\n')
+        path = os.path.join(os.path.expanduser('~'), 'carga_producto.xls')
+        try:
+            with open(path, "w") as f:
+                f.write('price,description,provider_code\n')
+        except FileNotFoundError:
+            pass
 
         try:
             subprocess.call('start ' + path, shell=True)
