@@ -49,16 +49,25 @@ class Controller(object):
         self.file = []
 
         with open(file, newline='') as csvfile:
-            csvreader = csv.DictReader(csvfile)
+            try:
+                dialect = csv.Sniffer().sniff(csvfile.read(1024))
+                csvfile.seek(0)
+            except csv.Error:
+                self.showFileFormatError()
+                return
 
-            for row in csvreader:
-                self.file.append(
-                    {
-                        'provider_code': str(row['provider_code']).strip(),
-                        'description': str(row['description']).strip(),
-                        'price': row['price'],
-                    }
-                )
+            try:
+                for row in csv.DictReader(csvfile, dialect=dialect):
+                    self.file.append(
+                        {
+                            'provider_code': str(row['provider_code']).strip(),
+                            'description': str(row['description']).strip(),
+                            'price': row['price'],
+                        }
+                    )
+            except KeyError:
+                self.showFileHeaderError()
+                return
 
     def matchProduct(self, provider_code, product_description):
         try:
@@ -68,6 +77,9 @@ class Controller(object):
             return None
         else:
             if product['description'] == product_description:
+                # remueve el producto encontrado del dict para poder mostrar la lista de productos no actualizados
+                self.database.products.pop('provider_code', None)
+
                 return product['id']
             else:
                 self.description_not_found_list.append("%s, %s" % (provider_code, product['description']))
@@ -144,28 +156,43 @@ class Controller(object):
         """Termina la etapa de importacion de datos."""
         self.loadingScreen.hide()
 
+        # productos de la DB que no fueron actualizados
+        not_updated = self.database.products.values()
+
         self.database.commit()
         self.database.close()
 
-        self.reportScreen.updateValues(self.updated_list, self.failed_list, self.code_not_found_list, self.description_not_found_list)
+        self.reportScreen.updateValues(self.updated_list, self.failed_list, self.code_not_found_list, self.description_not_found_list, not_updated)
         self.reportScreen.show()
 
     def showDatabaseNotAvailable(self):
-        """Muestra un mensaje de error."""
+        """Muestra un mensaje de error cuando falla la conexion a la base de datos."""
         QMessageBox.information(None, "Base de datos no disponible", """<b> La base de datos no reponde.</b>
             <p>Verifique la conexion de este equipo y la base de datos. Tenga presente
             que esta aplicacion solo funciona in-situ.""")
         self.exit(1)
 
     def showDatabaseQueryFailed(self):
-        """Muestra un mensaje de error."""
+        """Muestra un mensaje de error cuando una consulta falla."""
         QMessageBox.information(None, "La consulta a la Base de datos ha fallado", """<b> Ha fallado una consulta a la base de datos.</b>
             <p>Verifique la conexion de este equipo y la base de datos.""")
         self.exit(1)
 
+    def showFileFormatError(self):
+        """Muestra un mensaje de error cuando el formato del archivo CSV no es valido."""
+        QMessageBox.information(None, "Formato de archivo no valido", """<b> El formato del archivo no es valido.</b>
+            <p>Verifique que los pasos efectuados se han realizado como indica el instructivo.""")
+        self.exit(1)
+
+    def showFileHeaderError(self):
+        """Muestra un mensaje de error cuando algun campo no esta en el archivo CSV."""
+        QMessageBox.information(None, "Formato de archivo no valido", """<b> La cabecera del archivo es invalida.</b>
+            <p>Verifique que la primera linea del archivo posee los campos description, provider_code y price.""")
+        self.exit(1)
+
     def generateFile(self):
         """Genera un template que sirve como guia para cargar los productos"""
-        path = os.path.join(os.path.expanduser('~'), 'carga_producto.xls')
+        path = os.path.join(os.path.expanduser('~'), 'carga_producto.csv')
         try:
             with open(path, "w") as f:
                 f.write('price,description,provider_code\n')

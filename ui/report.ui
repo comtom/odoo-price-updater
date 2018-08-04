@@ -7,17 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>693</width>
-    <height>650</height>
+    <height>678</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
      <x>340</x>
-     <y>610</y>
+     <y>640</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -37,7 +34,7 @@
     <rect>
      <x>10</x>
      <y>80</y>
-     <width>621</width>
+     <width>671</width>
      <height>20</height>
     </rect>
    </property>
@@ -65,51 +62,120 @@
     <string>Actualizacion completada</string>
    </property>
   </widget>
-  <widget class="QLabel" name="lbl_notfound">
+  <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>370</y>
-     <width>451</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Los siguientes productos no han encontrado (codigo inexistente)</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="lbl_notmatched">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>120</y>
-     <width>541</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Los siguientes productos no coinciden con la descripcion (codigo dado de alta)</string>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="lst_notmatched">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>150</y>
+     <y>110</y>
      <width>671</width>
-     <height>192</height>
+     <height>521</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QListWidget" name="lst_notfound">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>400</y>
-     <width>671</width>
-     <height>192</height>
-    </rect>
-   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Producto con error</string>
+       </attribute>
+       <widget class="QLabel" name="lbl_notmatched">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>641</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Los siguientes productos no coinciden con la descripcion (codigo dado de alta)</string>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="lst_notmatched">
+        <property name="geometry">
+         <rect>
+          <x>-1</x>
+          <y>40</y>
+          <width>671</width>
+          <height>451</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Codigo Inexistente</string>
+       </attribute>
+       <widget class="QListWidget" name="lst_notfound">
+        <property name="geometry">
+         <rect>
+          <x>-1</x>
+          <y>40</y>
+          <width>671</width>
+          <height>451</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lbl_notfound">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>651</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Los siguientes productos no se han encontrado (tal vez deba dar de alta el producto manualmente)</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="tab_5">
+       <attribute name="title">
+        <string>No actualizados</string>
+       </attribute>
+       <widget class="QListWidget" name="lst_notupdated">
+        <property name="geometry">
+         <rect>
+          <x>-1</x>
+          <y>40</y>
+          <width>661</width>
+          <height>441</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="lbl_notfound_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>631</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Los siguientes productos no han sido enviados en el listado del proveedor (consultar precio)</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
