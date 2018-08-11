@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QApplication, QMessageBox
 from controller import Controller
 
 
-__price_updater_version__ = '1.0.6'     # debe tener 4 digitos
+__price_updater_version__ = '1.0.7'     # debe tener 4 digitos
 
 config = dict()
 
