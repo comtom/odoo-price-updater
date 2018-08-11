@@ -80,6 +80,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::ActionsContextMenu</enum>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -115,6 +118,22 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="btn_copy_notmatched">
+        <property name="geometry">
+         <rect>
+          <x>607</x>
+          <y>0</y>
+          <width>60</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Copiar</string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -130,18 +149,34 @@
           <height>451</height>
          </rect>
         </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
        </widget>
        <widget class="QLabel" name="lbl_notfound">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>651</width>
+          <width>601</width>
           <height>20</height>
          </rect>
         </property>
         <property name="text">
-         <string>Los siguientes productos no se han encontrado (tal vez deba dar de alta el producto manualmente)</string>
+         <string>Los siguientes productos no se han encontrado (debe dar de alta el producto manualmente)</string>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="btn_copy_notfound">
+        <property name="geometry">
+         <rect>
+          <x>615</x>
+          <y>0</y>
+          <width>51</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Copiar</string>
         </property>
        </widget>
       </widget>
@@ -158,8 +193,11 @@
           <height>441</height>
          </rect>
         </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
        </widget>
-       <widget class="QLabel" name="lbl_notfound_2">
+       <widget class="QLabel" name="lbl_notupdated">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -170,6 +208,19 @@
         </property>
         <property name="text">
          <string>Los siguientes productos no han sido enviados en el listado del proveedor (consultar precio)</string>
+        </property>
+       </widget>
+       <widget class="QToolButton" name="btn_copy_notupdated">
+        <property name="geometry">
+         <rect>
+          <x>615</x>
+          <y>0</y>
+          <width>51</width>
+          <height>40</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Copiar</string>
         </property>
        </widget>
       </widget>
