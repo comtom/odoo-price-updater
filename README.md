@@ -1,7 +1,6 @@
 # odoo-price-updater
 
-Actualizador de precios para Odoo mediante listas de precios de proveedores.
+Bulk Price Updater tool for Odoo ERP.
 
-Permite importar archivos para actualizar precios de los productos para cada proveedor configurado en el sistema.
-
-Compilar con nuitka.
+It allows to import files and update all provider products, is quite usefull for retail in emerging countries in wich prices change frequently.
+Can be compiled against nuitka to provide a single binary and is quite performant.
